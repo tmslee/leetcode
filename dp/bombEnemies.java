@@ -13,13 +13,15 @@ class Solution {
           for(int c=0 ; c<cols ; c++){
               char currentSpace = grid[r][c];
               
-              if (c == 0 || grid[r][c-1] == 'W') {
+              //calculate rowhit when youre first col or encountered a wall in the previous col
+              if (c == 0 || grid[r][c-1] == 'W') { 
                   rowHit = 0;
                   for(int k=c ; k<cols ; k++){
                       if(grid[r][k] == 'W') break;
                       else if (grid[r][k] == 'E') rowHit++;
                   }
               }
+              //calculate colhit when youre first row or encountered a wallin the previous row
               if (r == 0 || grid[r-1][c] == 'W') {
                   colHit[c] = 0;
                   for(int k=r ; k<rows ; k++){
