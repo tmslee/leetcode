@@ -1,6 +1,5 @@
 class Solution {
   public boolean canFinish(int numCourses, int[][] prerequisites) {
-
     // course -> list of next courses
     HashMap<Integer, List<Integer>> courseDict = new HashMap<>();
 
