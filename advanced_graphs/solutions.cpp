@@ -1,4 +1,4 @@
-// walls and gates
+// 286 walls and gates
 void wallsAndGates(std::vector<std::vector<int>>& rooms) {
     if(rooms.empty()) return;
 

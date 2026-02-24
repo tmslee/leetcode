@@ -1,4 +1,4 @@
-// find median from data stream
+// 295 find median from data stream
 class MedianFinder {
 public:
     using MinHeap = std::priority_queue<int, vector<int>, greater<int>>;
