@@ -39,3 +39,28 @@ double findMedianSortedArrays(const vector<int>& nums1,const vector<int>& nums2)
     
     throw std::invalid_argument{"no valid median partition found"};
 }
+
+// 33 search in rotated sorted array
+int search(const std::vector<int>& nums, const int target) {
+    const int n = std::ssize(nums);
+    int l = 0;
+    int r = n-1;
+    while(l <= r) {
+        const int m = l + (r-l)/2;
+        if(nums[m] == target) return m;
+        if(nums[l] <= nums[m]) {
+            if(target >= nums[l] && target < nums[m]) {
+                r = m-1;
+            } else {
+                l = m+1;
+            }
+        } else {
+            if(target > nums[m] && target <= nums[r]) {
+                l = m+1;
+            } else {
+                r = m-1;
+            }
+        }
+    }
+    return -1;
+}
