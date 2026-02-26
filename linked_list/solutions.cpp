@@ -13,3 +13,25 @@ ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
     }
     return dummy.next;
 }
+
+// remove nth node from end of list
+ListNode* removeNthFromEnd(ListNode* head, const int n) {
+    ListNode dummy(0, head);
+    ListNode* fast = &dummy;
+    ListNode* slow = &dummy;
+
+    for(int i=0; i<n; ++i) {
+        fast = fast->next;
+    }
+    
+    while(fast->next) {
+        fast = fast->next;
+        slow = slow->next;
+    }
+
+    ListNode* to_delete = slow->next;
+    slow->next = to_delete->next;
+    delete to_delete;
+
+    return dummy.next;
+}
