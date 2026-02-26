@@ -22,3 +22,23 @@ bool isValid(const std::string& s) {
 
     return stack.empty();
 }
+
+// 84 largest rectangle in histogram
+int largestRectangleArea(const std::vector<int>& heights) {
+    const int n = std::ssize(heights);
+    std::vector<int> stack;
+    stack.reserve(n+1);
+    int ans = 0;
+    for(int i=0; i<=n; ++i) {
+        // height 0 at i==n to flush remaining bars from stack
+        const int currH = i<n ? heights[i] : 0;
+        while(!stack.empty() && heights[stack.back()] > currH) {
+            const int h = heights[stack.back()]; 
+            stack.pop_back();
+            const int w = stack.empty() ? i : i-stack.back()-1;
+            ans = std::max(ans, h*w);
+        } 
+        stack.push_back(i);
+    }
+    return ans;
+}
