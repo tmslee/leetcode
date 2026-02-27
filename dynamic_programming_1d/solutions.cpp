@@ -27,3 +27,16 @@ std::string longestPalindrome(const std::string& s) {
     }
     return s.substr(best_start, best_len);
 }
+
+// 70 climbing stairs
+int climbStairs(const int n) {
+    if (n <= 2) return n;
+    int prev2 = 1;
+    int prev1 = 2;
+    for (int i = 3; i <= n; ++i) {
+        const int curr = prev1 + prev2;
+        prev2 = prev1;
+        prev1 = curr;
+    }
+    return prev1;
+}

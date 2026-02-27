@@ -12,3 +12,15 @@ int jump(const std::vector<int>& nums) {
     }
     return jumps;
 }
+
+// 53 maximum subarray
+int maxSubArray(const std::vector<int>& nums) {
+    int ans = std::numeric_limits<int>::min();
+    int currSum = 0;
+    for(const int n : nums) {
+        currSum = std::max(currSum + n, n);
+        ans = std::max(ans, currSum);
+    }
+    return ans;
+}
+
