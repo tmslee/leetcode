@@ -19,14 +19,42 @@ bool isMatch(const std::string& s, const std::string& p) {
             if(pchar == '.' || pchar == schar) {
                 dp[i][j] = dp[i-1][j-1];
             } else if(pchar == '*') {
-                dp[i][j] = dp[i][j-2];
+                dp[i][j] = dp[i][j-2]; // zero case
                 const char prev_pchar = p[j-2];
-                if(prev_pchar == '.' || prev_pchar == schar) {
+                if(prev_pchar == '.' || prev_pchar == schar) { //one or more case
                     dp[i][j] = dp[i][j] || dp[i-1][j];
                 }
             }
         }
     }
 
+    return dp[slen][plen];
+}
+
+// 44 wildcard matching
+// dp - O(SP) solution 
+bool isMatch(const std::string& s, const std::string& p) {
+    const int slen = static_cast<int>(s.size());
+    const int plen = static_cast<int>(p.size());
+    std::vector<std::vector<bool>> dp(slen+1, std::vector<bool>(plen+1, false));
+    
+    dp[0][0] = true;
+    for(int i=1; i<=plen; ++i) {
+        if(p[i-1] == '*') {
+            dp[0][i] = dp[0][i-1];
+        }
+    }
+
+    for(int i=1; i<=slen; ++i) {
+        for(int j=1; j<=plen; ++j) {
+            const int sidx = i-1;
+            const int pidx = j-1;
+            if(p[pidx] == '?' || p[pidx] == s[sidx]) {
+                dp[i][j] = dp[i-1][j-1];
+            } else if(p[pidx] == '*') {
+                dp[i][j] = dp[i][j-1] || dp[i-1][j]; 
+            }
+        }
+    }
     return dp[slen][plen];
 }
