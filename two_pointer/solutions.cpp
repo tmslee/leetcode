@@ -42,3 +42,37 @@ std::vector<std::vector<int>> threeSum(std::vector<int>& nums) {
     }
     return ans;
 }
+
+// 42 trapping rainwater
+int trap(const std::vector<int>& height) {
+    int l=0;
+    int r=static_cast<int>(height.size())-1;
+    int lmax = 0;
+    int rmax = 0;
+
+    int ans = 0;
+    /*
+        if h[l] < h[r]
+        we know that the bottleneck wtill be lmax
+        only case where this can go wrong is is h[r] is SHORTER than lmax -> impossible
+        iteration ensures we always move the shorter pointer, meaning at any given point in time
+        all h[r] that is shorter than lmax wouldve been processed already
+        meaning that current h[r] >= lmax.
+        
+        AT ALL TIMES:
+        if h[l] < h[r] : h[r] >= lmax
+        if h[r] >= h[l] : h[l] >= rmax
+    */
+    while(l<r) {
+        if(height[l] < height[r]) {
+            lmax = std::max(lmax, height[l]);
+            ans += lmax-height[l];
+            ++l;
+        } else {
+            rmax = std::max(rmax, height[r]);
+            ans += rmax-height[r];
+            --r;
+        }
+    }
+    return ans;
+}
