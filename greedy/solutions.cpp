@@ -24,3 +24,13 @@ int maxSubArray(const std::vector<int>& nums) {
     return ans;
 }
 
+// 121 best time to buy and sell stock
+int maxProfit(const std::vector<int>& prices) {
+    int minBuy = std::numeric_limits<int>::max();
+    int ans = 0;
+    for(const int price : prices) {
+        minBuy = std::min(minBuy, price);
+        ans = std::max(ans, price-minBuy);
+    }
+    return ans;
+}
