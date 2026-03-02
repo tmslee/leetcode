@@ -33,3 +33,25 @@ int firstMissingPositive(vector<int>& nums) {
     }
     return n+1;
 }
+
+// 49 group anagrams
+std::vector<std::vector<std::string>> groupAnagrams(const std::vector<std::string>& strs) {
+    std::unordered_map<std::string, vector<string>> groups;
+
+    auto make_key = [](const std::string& s) {
+        std::array<int, 26> counts{};
+        for(const char c : s) ++counts[c-'a'];
+        return std::string(counts.begin(), counts.end());
+    };
+
+    for(const auto& str : strs) {
+        std::string key = make_key(str);
+        groups[key].push_back(str);
+    }
+    
+    std::vector<std::vector<std::string>> ans;
+    for(const auto& [key, group] : groups) {
+        ans.push_back(std::move(group));
+    }
+    return ans;
+}
