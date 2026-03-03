@@ -42,3 +42,25 @@ int largestRectangleArea(const std::vector<int>& heights) {
     }
     return ans;
 }
+
+// 150 evaluate reverse polish notation
+int evalRPN(const std::vector<std::string>& tokens) {
+    std::stack<int> st;
+    for(const auto& token : tokens) {
+        if(token.size() == 1 && !std::isdigit(token[0])) {
+            int sec = st.top();
+            st.pop();
+            int fir = st.top();
+            st.pop();
+            switch(token[0]) {
+                case '+': st.push(fir + sec); break;
+                case '-': st.push(fir - sec); break;
+                case '*': st.push(fir * sec); break;
+                case '/': st.push(fir / sec); break;
+            }
+        } else {
+            st.push(std::stoi(token));
+        }
+    }
+    return st.top();
+}
