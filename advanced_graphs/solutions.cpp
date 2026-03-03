@@ -95,3 +95,38 @@ std::vector<std::string> findItinerary(const std::vector<std::vector<std::string
     std::reverse(ans.begin(), ans.end());
     return ans;
 }
+
+// 743 network delay time
+int networkDelayTime(const std::vector<std::vector<int>>& times, const int n, const int k) {
+    using P = std::pair<int,int>;
+    
+    std::vector<std::vector<P>> graph(n);
+    for(const auto& time : times) {
+        graph[time[0]-1].emplace_back(time[1]-1, time[2]);
+    }
+
+    const int max_val = std::numeric_limits<int>::max();
+    std::vector<int> dists(n, max_val);
+
+    dists[k-1] = 0;
+    using PQ = std::priority_queue<P, std::vector<P>, std::greater<P>>;
+
+    PQ pq;
+    pq.push({0, k-1});
+    while(!pq.empty()) {
+        const auto [curr_dist, curr_node] = pq.top();
+        pq.pop();
+        if(curr_dist > dists[curr_node]) continue;
+
+        for(const auto [dest, distance] : graph[curr_node]) {
+            const int new_dist = curr_dist + distance;
+            if(new_dist < dists[dest]) {
+                dists[dest] = new_dist;
+                pq.push({new_dist, dest});
+            }
+        }
+    }
+
+    const int ans = *std::ranges::max_element(dists);
+    return ans == max_val ? -1 : ans;
+}
