@@ -129,3 +129,24 @@ std::vector<std::vector<std::string>> findLadders(
     backtrack();
     return ans;
 }
+
+// 133 clone graph
+Node* cloneGraph(Node* node) {
+    std::unordered_map<Node*, Node*> copied;
+
+    auto helper = [&](this auto& self, Node* n)-> Node* {
+        if(!n) return nullptr;
+        if(const auto it = copied.find(n); it != copied.end()) {
+            return it->second;
+        }
+
+        Node* newNode = new Node(n->val);
+        copied[n] = newNode;
+        for(auto* nei : n->neighbors) {
+            newNode->neighbors.push_back(self(nei));
+        }
+        return newNode;
+    };
+    
+    return helper(node);
+}
