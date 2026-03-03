@@ -55,3 +55,25 @@ std::vector<std::vector<std::string>> groupAnagrams(const std::vector<std::strin
     }
     return ans;
 }
+
+// 621 task scheduler
+int leastInterval(const std::vector<char>& tasks, const int n) {
+    std::array<int, 26> freqs{};
+    int max_freq = 0;
+    int max_idx = 0;
+    for(const char c : tasks) {
+        const int freq = ++freqs[c - 'A'];
+        if(freq > max_freq) {
+            max_freq = freq;
+            max_idx = c-'A';
+        }
+    }
+    int gaps = n*(max_freq-1);
+    for(int i=0; i<26; ++i) {
+        if(i!=max_idx) {
+            gaps -= std::min(max_freq-1, freqs[i]);
+        }
+    }
+    const int sz = static_cast<int>(tasks.size());
+    return (gaps > 0) ? sz + gaps : sz;
+}
