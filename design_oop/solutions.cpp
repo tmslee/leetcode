@@ -347,3 +347,37 @@ public:
         }
     }
 };
+
+// 155 minstack
+class MinStack {
+    std::stack<int> st_;
+    std::stack<std::pair<int,int>> min_st_;
+
+public:
+    MinStack() = default;
+
+    void push(int val) {
+        st_.push(val);
+        if(min_st_.empty() || val < min_st_.top().first) {
+            min_st_.push({val, 1});
+        } else if(val == min_st_.top().first) {
+            ++min_st_.top().second;
+        }
+    }
+    
+    void pop() {
+        const int popped = st_.top();
+        st_.pop();
+        if(popped == min_st_.top().first && --min_st_.top().second == 0){
+            min_st_.pop();
+        }
+    }
+    
+    [[nodiscard]] int top() const {
+        return st_.top();
+    }
+    
+    [[nodiscard]] int getMin() const {
+        return min_st_.top().first;
+    }
+};
