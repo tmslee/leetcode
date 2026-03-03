@@ -19,3 +19,25 @@ bool isSameTree(TreeNode* p, TreeNode* q) {
     }
     return false;
 }
+
+// 102 binary tree level order traversal
+std::vector<std::vector<int>> levelOrder(TreeNode* root) {
+    std::vector<std::vector<int>> ans;
+    if(!root) return ans;
+
+    std::queue<TreeNode*> q;
+    q.push(root);
+    while(!q.empty()) {
+        const int sz = static_cast<int>(q.size());
+        std::vector<int> curr_level;
+        for(int i=0; i<sz; ++i) {
+            const auto* node = q.front();
+            q.pop();
+            curr_level.push_back(node->val);
+            if(node->left) q.push(node->left);
+            if(node->right) q.push(node->right);
+        }
+        ans.push_back(std::move(curr_level));
+    }
+    return ans;
+}
