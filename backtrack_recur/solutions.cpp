@@ -48,3 +48,33 @@ std::vector<string> generateParenthesis(const int n) {
     gen(0, 0);
     return ans;
 }
+
+// 39 combination sum
+std::vector<std::vector<int>> combinationSum(std::vector<int>& candidates, const int target) {
+    if(candidates.empty()) return {};
+    const int n = static_cast<int>(candidates.size());
+    std::sort(candidates.begin(), candidates.end());
+    std::vector<std::vector<int>> ans;
+
+    std::vector<int> curr;
+
+    auto helper = [&](this auto& self, const int startIdx, const int currSum) -> void{
+        if(currSum == target) {
+            ans.push_back(curr);
+            return;
+        }
+        for(int i=startIdx; i<n; ++i) {
+            const int cand = candidates[i];
+            if(currSum + cand <= target) {
+                curr.push_back(cand);
+                self(i, currSum + cand);
+                curr.pop_back();
+            } else {
+                break;
+            }
+        }
+    };
+
+    helper(0, 0);
+    return ans;
+}
