@@ -64,3 +64,45 @@ int search(const std::vector<int>& nums, const int target) {
     }
     return -1;
 }
+
+// 34 find first and last position of element in sorted array
+std::vector<int> searchRange(const std::vector<int>& nums, const int target) {
+    const int n = static_cast<int>(nums.size());
+    auto helper = [&](const int t, const bool is_left) -> int {
+        int l = 0;
+        int r = n-1;
+        int ans = -1;
+        while(l<=r) {
+            int m = l + (r-l)/2;
+            if(nums[m] == t) {
+                ans = m;
+            }
+            if(is_left) {
+                if(nums[m] >= t) {
+                    r = m-1;
+                } else {
+                    l = m+1;
+                }
+            } else {
+                if(nums[m] <= t) {
+                    l = m+1;
+                } else {
+                    r = m-1;
+                }
+            }
+        }
+        return ans;
+    };
+    return {helper(target, true), helper(target, false)};
+}
+// using lower_bound/ uppser_bound
+vector<int> searchRange(vector<int>& nums, int target) {
+    auto lo = std::lower_bound(nums.begin(), nums.end(), target);
+    auto hi = std::upper_bound(nums.begin(), nums.end(), target);
+    
+    if(lo == nums.end() || *lo != target) return {-1, -1};
+    return {
+        static_cast<int>(lo - nums.begin()),
+        static_cast<int>(hi - nums.begin()) - 1
+    };
+}
