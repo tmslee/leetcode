@@ -381,3 +381,22 @@ public:
         return min_st_.top().first;
     }
 };
+
+// 346 moving average from data stream
+class MovingAverage {
+    const int cap_;
+    std::queue<int> q_;
+    double sum_ = 0.0;
+public:
+    explicit MovingAverage(const int size) : cap_(size) {}
+    
+    double next(int val) {
+        sum_ += val;
+        q_.push(val);
+        if(std::ssize(q_) > cap_) {
+            sum_ -= q_.front();
+            q_.pop();
+        }
+        return sum_/q_.size();
+    }
+};
