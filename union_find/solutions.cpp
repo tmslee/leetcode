@@ -154,3 +154,62 @@ std::vector<int> findRedundantConnection(const std::vector<std::vector<int>>& ed
 
     return {-1, -1};
 }
+
+// 721 accounts merge
+class Solution {
+    std::vector<int> roots_;
+    std::vector<int> sizes_;
+
+    int find(const int acc){
+        if(roots_[acc] != acc) {
+            roots_[acc] = find(roots_[acc]);
+        }
+        return roots_[acc];
+    }
+
+    void unionize(const int acc1, const int acc2) {
+        int r1 = find(acc1);
+        int r2 = find(acc2);
+        if(r1 == r2) return;
+        if(sizes_[r1] < sizes_[r2]) std::swap(r1, r2);
+        roots_[r2] = r1;
+        sizes_[r1] += sizes_[r2];
+    }
+
+public:
+
+    std::vector<std::vector<std::string>> accountsMerge(const std::vector<std::vector<std::string>>& accounts) {
+        // accounts are same if theres a common email.
+        const int n = static_cast<int>(accounts.size());
+        roots_.resize(n);
+        std::iota(roots_.begin(), roots_.end(), 0);
+        sizes_.assign(n, 1);
+
+        std::unordered_map<std::string, int> idx_map;
+
+        for(int i=0; i<n; ++i) {
+            for(int j=1; j<static_cast<int>(accounts[i].size()); ++j) {
+                const auto& email = accounts[i][j];
+                auto it = idx_map.find(email);
+                if(it != idx_map.end()) {
+                    unionize(it->second, i);
+                }
+                idx_map[email] = i;
+            }
+        }
+
+        std::unordered_map<int, std::vector<std::string>> groups;
+        for (const auto& [email, idx] : idx_map) {
+            groups[find(idx)].push_back(email);
+        }
+
+        std::vector<std::vector<std::string>> ans;
+        for (auto& [root, emails] : groups) {
+            std::sort(emails.begin(), emails.end());
+            emails.insert(emails.begin(), accounts[root][0]);
+            ans.push_back(std::move(emails));
+        }
+
+        return ans;
+    }
+};
