@@ -40,3 +40,26 @@ int climbStairs(const int n) {
     }
     return prev1;
 }
+
+// 91 decode ways
+int numDecodings(const std::string& s) {
+    const int n = static_cast<int>(s.size());
+    if(n==0 || s[0]=='0') return 0;
+
+    int prev2 = 1;
+    int prev1 = 1;
+
+    for(int i=n-1; i>=0; --i) {
+        int curr = 0;
+        if(s[i] != '0') {
+            curr = prev1;
+            if(i+1 < n && (s[i] == '1' || (s[i] == '2' && s[i+1] <= '6'))) {
+                curr += prev2;
+            }
+        }
+        prev2 = prev1;
+        prev1 = curr;
+    }
+
+    return prev1;
+}
