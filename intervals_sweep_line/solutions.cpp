@@ -39,3 +39,13 @@ std::vector<std::vector<int>> insert(const std::vector<std::vector<int>>& interv
     }
     return ans;
 }
+
+// 252 meeting rooms
+bool canAttendMeetings(std::vector<std::vector<int>>& intervals) {
+    std::sort(intervals.begin(), intervals.end());
+    const int n = static_cast<int>(intervals.size());
+    for(int i=1; i<n; ++i) {
+        if(intervals[i-1][1] > intervals[i][0]) return false;
+    }
+    return true;
+}
