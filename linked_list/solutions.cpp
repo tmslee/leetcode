@@ -53,3 +53,26 @@ ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
     curr->next = list1 ? list1 : list2;
     return dummy.next;
 }
+
+// 23 merge k sorted lists
+ListNode* mergeKLists(const std::vector<ListNode*>& lists) {
+    ListNode dummy(0);
+    ListNode* curr = &dummy;
+
+    auto cmp = [](ListNode* l1, ListNode* l2) {
+        return l1->val > l2->val;
+    };
+    std::priority_queue<ListNode*, vector<ListNode*>, decltype(cmp)> pq(cmp);
+    for(auto* list : lists) {
+        if(list) pq.push(list);
+    }
+
+    while(!pq.empty()) {
+        auto* node = pq.top();
+        pq.pop();
+        curr->next = node;
+        if(node->next) pq.push(node->next);
+        curr = curr->next;
+    }
+    return dummy.next;
+}
