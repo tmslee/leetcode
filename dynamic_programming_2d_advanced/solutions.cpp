@@ -58,3 +58,14 @@ bool isMatch(const std::string& s, const std::string& p) {
     }
     return dp[slen][plen];
 }
+
+// 62 unique paths
+int uniquePaths(const int m, const int n) {
+    std::vector<int> mem(n, 1);
+    for(int r=1; r<m; ++r) {
+        for(int c=1; c<n; ++c) {
+            mem[c] += mem[c-1];
+        }
+    }
+    return mem[n-1];
+}
