@@ -64,3 +64,34 @@ int evalRPN(const std::vector<std::string>& tokens) {
     }
     return st.top();
 }
+
+// 224 basic calculator
+int calculate(const std::string& s) {
+    std::stack<int> signs;
+    signs.push(1);
+    int result = 0;
+    int sign = 1;
+    const int n = static_cast<int>(s.size());
+
+    for (int i = 0; i < n; ++i) {
+        const char c = s[i];
+        if (std::isdigit(c)) {
+            long long num = 0;
+            while (i < n && std::isdigit(s[i])) {
+                num = num * 10 + (s[i] - '0');
+                ++i;
+            }
+            result += static_cast<int>(sign*num);
+            --i;  // outer loop will ++i
+        } else if (c == '+') {
+            sign = signs.top();
+        } else if (c == '-') {
+            sign = -signs.top();
+        } else if (c == '(') {
+            signs.push(sign);
+        } else if (c == ')') {
+            signs.pop();
+        }
+    }
+    return result;
+}
