@@ -41,3 +41,9 @@ std::vector<std::vector<int>> levelOrder(TreeNode* root) {
     }
     return ans;
 }
+
+// 104 max depth of binary tree
+int maxDepth(TreeNode* root) {
+    if(!root) return 0;
+    return std::max(maxDepth(root->left), maxDepth(root->right)) + 1;
+}
