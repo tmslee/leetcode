@@ -73,3 +73,36 @@ void rotate(std::vector<std::vector<int>>& matrix) {
         std::reverse(row.begin(), row.end());
     }
 }
+
+// 50 pow(x,n)
+double myPow(const double x, const int n) {
+    long long exp = std::abs(static_cast<long long>(n));
+    double base = x;
+    double res = 1.0;
+    // say exp = 13. in binary, 1101 if we say each bit represnet powers:
+    //   1   1   0    1
+    //  x^8 x^4 x^2  x^1
+    // result = product of all valid bits x^(8+4+1) = x^13
+    while(exp > 0) {
+        if(exp%2 == 1) { //essentially checking if bit is 1
+            res *= base;
+        }
+        base *= base;
+        exp /= 2; //essentially bitshifting to right
+    }
+    return (n < 0) ? 1.0/res : res;
+}
+
+//resurvie solution
+double myPow(const double x, const int n) {
+    long long exp = std::abs(static_cast<long long>(n));
+
+    auto helper = [&](this auto& self, const long long pow) -> double {
+        if(pow == 0) return 1.0;
+        if(pow%2 == 1) return x*self(pow-1);
+        const double half = self(pow/2);
+        return half*half;
+    };
+
+    return (n < 0) ? 1.0/helper(exp) : helper(exp);
+}
