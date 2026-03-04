@@ -192,3 +192,131 @@ public:
         }
     }
 };
+
+// 1116 print zero even odd
+class ZeroEvenOdd {
+private:
+    int n_;
+    std::mutex m_;
+    bool zero_turn_ = true;
+    std::condition_variable cv_;
+    int curr_ = 1;
+
+public:
+    explicit ZeroEvenOdd(int n) : n_(n) {}
+
+    // printNumber(x) outputs "x", where x is an integer.
+    void zero(function<void(int)> printNumber) {
+        while(true) {
+            std::unique_lock<std::mutex> lk(m_);
+            cv_.wait(lk, [this]{ return curr_ > n_ || zero_turn_; });
+            if(curr_ > n_) {
+                cv_.notify_all();
+                break;
+            }
+            printNumber(0);
+            zero_turn_ = false;
+            cv_.notify_all();
+        }   
+    }
+
+    void even(function<void(int)> printNumber) {
+        while(true) {
+            std::unique_lock<std::mutex> lk(m_);
+            cv_.wait(lk, [this]{ return curr_ > n_ || (!zero_turn_ && curr_%2 == 0); });
+            if(curr_ > n_) {
+                cv_.notify_all();
+                break;
+            }
+            printNumber(curr_);
+            zero_turn_ = true;
+            ++curr_;
+            cv_.notify_all();
+        }   
+    }
+
+    void odd(function<void(int)> printNumber) {
+        while(true) {
+            std::unique_lock<std::mutex> lk(m_);
+            cv_.wait(lk, [this]{ return curr_ > n_ || (!zero_turn_ && curr_%2 != 0); });
+            if(curr_ > n_) {
+                cv_.notify_all();
+                break;
+            }
+            printNumber(curr_);
+            zero_turn_ = true;
+            ++curr_;
+            cv_.notify_all();
+        } 
+    }
+};
+// semaphore solution
+class ZeroEvenOdd {
+private:
+    const int n_;
+    std::binary_semaphore sem_z_{1};
+    std::binary_semaphore sem_o_{0};
+    std::binary_semaphore sem_e_{0};
+
+public:
+    explicit ZeroEvenOdd(int n) : n_(n) {}
+
+    // printNumber(x) outputs "x", where x is an integer.
+    void zero(function<void(int)> printNumber) {
+        for(int i=1; i<=n_; ++i) {
+            sem_z_.acquire();
+            printNumber(0);
+            if(i%2==0) sem_e_.release();
+            else sem_o_.release();
+        }
+    }
+
+    void even(function<void(int)> printNumber) {
+        for(int i=2; i<=n_; i+=2) {
+            sem_e_.acquire();
+            printNumber(i);
+            sem_z_.release();
+        }
+    }
+
+    void odd(function<void(int)> printNumber) {
+        for(int i=1; i<=n_; i+=2) {
+            sem_o_.acquire();
+            printNumber(i);
+            sem_z_.release();
+        }
+    }
+};
+
+// atomics solution - pretty shit
+class ZeroEvenOdd {
+    const int n_;
+    std::atomic<int> state_{0};
+
+public:
+    explicit ZeroEvenOdd(int n) : n_(n) {}
+
+    void zero(std::function<void(int)> printNumber) {
+        for (int i = 1; i <= n_; ++i) {
+            while (state_.load(std::memory_order_acquire) != 0) {}
+            printNumber(0);
+            state_.store(i % 2 == 1 ? 1 : 2, std::memory_order_release);
+        }
+    }
+
+    void odd(std::function<void(int)> printNumber) {
+        for (int i = 1; i <= n_; i += 2) {
+            while (state_.load(std::memory_order_acquire) != 1) {}
+            printNumber(i);
+            state_.store(0, std::memory_order_release);
+        }
+    }
+
+    void even(std::function<void(int)> printNumber) {
+        for (int i = 2; i <= n_; i += 2) {
+            while (state_.load(std::memory_order_acquire) != 2) {}
+            printNumber(i);
+            state_.store(0, std::memory_order_release);
+        }
+    }
+};
