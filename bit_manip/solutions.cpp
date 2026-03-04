@@ -17,3 +17,17 @@ uint32_t reverseBits(uint32_t n) {
     }
     return ans;
 }
+
+// 191 number of 1 bits
+int hammingWeight(uint32_t n) {
+    int ans = 0;
+    while (n) {
+        n &= n-1;
+        ++ans;
+    }
+    return ans;
+}
+// std lib
+int hammingWeight(uint32_t n) {
+    return std::popcount(n);
+}
