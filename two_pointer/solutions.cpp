@@ -76,3 +76,18 @@ int trap(const std::vector<int>& height) {
     }
     return ans;
 }
+
+// 75 sort colors
+void sortColors(std::vector<int>& nums) {
+    const int n = static_cast<int>(nums.size());
+    int sidx0 = 0;
+    int sidx2 = n-1;
+    for(int i=0; i<=sidx2; ++i){
+        if(nums[i] == 0) {
+            std::swap(nums[i], nums[sidx0++]);
+        } else if(nums[i] == 2) {
+            std::swap(nums[i], nums[sidx2--]);
+            --i; //re-check swapped in value
+        }
+    }
+}
