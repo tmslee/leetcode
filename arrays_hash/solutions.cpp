@@ -77,3 +77,21 @@ int leastInterval(const std::vector<char>& tasks, const int n) {
     const int sz = static_cast<int>(tasks.size());
     return (gaps > 0) ? sz + gaps : sz;
 }
+
+// longest consecutive sequence O(n)
+int longestConsecutive(const std::vector<int>& nums) {
+    std::unordered_set<int> seen(nums.begin(), nums.end());
+    int ans = 0;
+    for(const int n : seen) {
+        if(!seen.contains(n+1)) {
+            int streak = 0;
+            int curr = n;
+            while(seen.contains(curr)) {
+                ++streak;
+                --curr;
+            }
+            ans = std::max(ans, streak);
+        }
+    }
+    return ans;
+}
