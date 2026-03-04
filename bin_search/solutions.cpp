@@ -106,3 +106,25 @@ vector<int> searchRange(vector<int>& nums, int target) {
         static_cast<int>(hi - nums.begin()) - 1
     };
 }
+
+// 74 search a 2d matrix
+bool searchMatrix(const std::vector<std::vector<int>>& matrix, const int target) {
+    if(matrix.empty()) return false;
+    const int rows = static_cast<int>(matrix.size());
+    const int cols = static_cast<int>(matrix[0].size());
+
+    int lo = 0;
+    int hi = rows*cols - 1;
+    while (lo <= hi) {
+        const int mid = lo + (hi-lo)/2;
+        const int r = mid/cols;
+        const int c = mid%cols;
+        if(matrix[r][c] == target) return true;
+        if(matrix[r][c] < target) {
+            lo = mid+1;
+        } else {
+            hi = mid-1;
+        }
+    }
+    return false;
+}
