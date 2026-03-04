@@ -50,3 +50,32 @@ std::string minWindow(const std::string& s, const std::string& t) {
     }
     return (shortest_len == std::numeric_limits<int>::max()) ? "" : s.substr(start, shortest_len);
 }
+
+//159 longest substring with at most two distinct characters
+int lengthOfLongestSubstringTwoDistinct(const std::string& s) {
+    const int n = static_cast<int>(s.size());
+    int l=0;
+    int ans = 0;
+
+    int last_seen1 = -1;
+    int last_seen2 = -1;
+    
+    for(int r=0; r<n; ++r) {
+        const char rc = s[r];
+        if(last_seen1 == -1 || s[last_seen1] == rc) {
+            last_seen1 = r;
+        } else if(last_seen2 == -1 || s[last_seen2] == rc) {
+            last_seen2 = r;
+        } else {
+            const int min_last_seen = std::min(last_seen1, last_seen2);
+            l = min_last_seen + 1;
+            if(min_last_seen == last_seen1) {
+                last_seen1 = r;
+            } else {
+                last_seen2 = r;
+            }
+        }
+        ans = std::max(ans, r-l+1);
+    }
+    return ans;
+}
