@@ -34,3 +34,14 @@ int maxProfit(const std::vector<int>& prices) {
     }
     return ans;
 }
+
+// 55 jump game
+bool canJump(const std::vector<int>& nums) {
+    const int n = static_cast<int>(nums.size());
+    int curr_max = nums[0];
+    for(int i=1; i<n; ++i){
+        if(i>curr_max) return false;
+        curr_max = std::max(curr_max, i+nums[i]);
+    }
+    return true;
+}
