@@ -45,3 +45,20 @@ bool canJump(const std::vector<int>& nums) {
     }
     return true;
 }
+
+// 134 gas station
+int canCompleteCircuit(const std::vector<int>& gas, const std::vector<int>& cost) {
+    const int n = static_cast<int>(gas.size());
+    int total_gain = 0;
+    int curr_gain = 0;
+    int ans = 0;
+    for(int i=0; i<n; ++i) {
+        total_gain += gas[i] - cost[i];
+        curr_gain += gas[i] - cost[i];
+        if(curr_gain < 0) {
+            ans = i+1;
+            curr_gain = 0;
+        }
+    }
+    return total_gain >= 0 ? ans : -1;
+}
