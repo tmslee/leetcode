@@ -49,3 +49,17 @@ bool canAttendMeetings(std::vector<std::vector<int>>& intervals) {
     }
     return true;
 }
+
+// 253 meeting rooms II
+int minMeetingRooms(std::vector<std::vector<int>>& intervals) {
+    if(intervals.empty()) return 0;
+    std::sort(intervals.begin(), intervals.end());
+    std::priority_queue<int, std::vector<int>, std::greater<int>> pq;
+    for(const auto& interval : intervals) {
+        if (!pq.empty() && pq.top() <= interval[0]) {
+            pq.pop();
+        }
+        pq.push(interval[1]);
+    }
+    return static_cast<int>(pq.size());
+}
