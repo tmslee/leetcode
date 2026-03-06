@@ -150,3 +150,37 @@ Node* cloneGraph(Node* node) {
     
     return helper(node);
 }
+
+// 200 number of islands
+int numIslands(std::vector<std::vector<char>>& grid) {
+    if(grid.empty()) return 0;
+    const int rows = static_cast<int>(grid.size());
+    const int cols = static_cast<int>(grid[0].size());
+    static constexpr std::array<std::pair<int,int>, 4> offsets = {{
+        {0,1},{0,-1},{1,0},{-1,0}
+    }};
+    int ans = 0;
+
+    auto expand = [&](this auto& self, const int r, const int c) -> void{
+        for(const auto [roffset, coffset] : offsets) {
+            const int nr = r+roffset;
+            const int nc = c+coffset;
+            if(nr>=0 && nr<rows && nc>=0 && nc<cols && grid[nr][nc] == '1') {
+                grid[nr][nc] = '0';
+                self(nr, nc);
+            }
+        }
+    };
+
+    for(int r=0; r<rows; ++r) {
+        for(int c=0; c<cols; ++c) {
+            if(grid[r][c] == '1') {
+                ++ans;
+                grid[r][c] = '0';
+                expand(r,c);
+            }
+        }
+    }
+
+    return ans;
+}
