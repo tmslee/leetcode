@@ -69,3 +69,26 @@ int uniquePaths(const int m, const int n) {
     }
     return mem[n-1];
 }
+
+// 72 edit distance
+int minDistance(const std::string& word1, const std::string& word2) {
+    const int len1 = static_cast<int>(word1.size());
+    const int len2 = static_cast<int>(word2.size());
+
+    std::vector<int> prev(len2+1);
+    std::iota(prev.begin(), prev.end(), 0);
+    std::vector<int> curr(len2+1);
+
+    for(int i1=1; i1<=len1; ++i1) {
+        curr[0] = i1;
+        for(int i2=1; i2<=len2; ++i2){
+            if(word1[i1-1] == word2[i2-1]) {
+                curr[i2] = prev[i2-1];
+            } else {
+                curr[i2] = std::min({curr[i2-1], prev[i2-1], prev[i2]}) + 1;
+            }
+        }
+        std::swap(prev, curr);
+    }
+    return prev[len2];
+}
