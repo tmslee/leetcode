@@ -78,3 +78,31 @@ std::vector<std::vector<int>> combinationSum(std::vector<int>& candidates, const
     helper(0, 0);
     return ans;
 }
+
+// 40 combination sum II
+std::vector<std::vector<int>> combinationSum2(std::vector<int>& candidates, const int target) {
+    if(candidates.empty()) return {};
+
+    const int n = static_cast<int>(candidates.size());
+    std::vector<std::vector<int>> ans;
+    std::vector<int> curr;
+
+    std::sort(candidates.begin(), candidates.end());
+
+    auto helper = [&](this auto& self, const int start, const int currSum) -> void{
+        if(currSum == target) {
+            ans.push_back(curr);
+            return;
+        }
+        for(int i=start; i<n; ++i) {
+            if(i != start && candidates[i] == candidates[i-1]) continue;
+            if(currSum + candidates[i] > target) break;
+            curr.push_back(candidates[i]);
+            self(i+1, currSum + candidates[i]);
+            curr.pop_back();
+        }
+    };
+
+    helper(0, 0);
+    return ans;
+}
