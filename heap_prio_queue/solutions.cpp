@@ -27,3 +27,28 @@ public:
         return upper.top();
     }
 };
+
+// 703 kth largest element in stream
+class KthLargest {
+
+std::priority_queue<int, std::vector<int>, std::greater<int>> pq_; 
+const int k_;
+
+public:
+    explicit KthLargest(const int k, const std::vector<int>& nums) : k_(k) {
+        for(const int n : nums) {
+            pq_.push(n);
+        }
+        while(static_cast<int>(pq_.size()) > k_) {
+            pq_.pop();
+        }
+    }
+    
+    [[nodiscard]] int add(int val) {
+        pq_.push(val);
+        if(static_cast<int>(pq_.size()) > k_) {
+            pq_.pop();
+        }
+        return pq_.top();
+    }
+};
