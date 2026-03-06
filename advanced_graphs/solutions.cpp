@@ -130,3 +130,57 @@ int networkDelayTime(const std::vector<std::vector<int>>& times, const int n, co
     const int ans = *std::ranges::max_element(dists);
     return ans == max_val ? -1 : ans;
 }
+
+// 778 swin in rising water
+int swimInWater(const std::vector<std::vector<int>>& grid) {
+    // min time until you can reach the bottom right square.
+    // brute force: bfs @ every timestamp?
+    // what is the minimum highest elevation in a possible path?
+
+    // what if we calculated lowest elevation possilbe to reach a cell
+    // we are starting from 0,0. 
+    // dijkstra using elevation instead of distance
+    if(grid.empty()) return 0;
+
+    const int rows = static_cast<int>(grid.size());
+    const int cols = static_cast<int>(grid[0].size());
+
+    using Coord = std::pair<int,int>;
+    static constexpr std::array<Coord, 4> offsets = {{
+        {0,1}, {0,-1}, {-1,0}, {1,0}
+    }};
+
+    auto get_coords = [&](const int idx) -> Coord {
+        return {idx/cols, idx%cols};
+    };
+    auto get_idx = [&](const int r, const int c) -> int {
+        return r*cols + c;
+    };
+
+    using Entry = std::pair<int,int>;
+    std::priority_queue<Entry, std::vector<Entry>, std::greater<Entry>> pq;
+    std::vector<int> min_highest_elevation(rows*cols, std::numeric_limits<int>::max());
+    min_highest_elevation[0] = grid[0][0];
+    pq.push({min_highest_elevation[0], 0});
+    
+    while(!pq.empty()) {
+        auto [curr_elevation, curr_idx] = pq.top();
+        pq.pop();
+        if(curr_idx == rows*cols-1) return curr_elevation;
+        if(curr_elevation > min_highest_elevation[curr_idx]) continue;
+        auto [r, c] = get_coords(curr_idx);
+        for(const auto [roff, coff] : offsets) {
+            const int nr = r+roff;
+            const int nc = c+coff;
+            if(nr>=0 && nc>=0 && nr<rows && nc<cols) {
+                const int nidx = get_idx(nr,nc);
+                const int new_elevation = std::max(curr_elevation, grid[nr][nc]);
+                if(new_elevation < min_highest_elevation[nidx]) {
+                    min_highest_elevation[nidx] = new_elevation;
+                    pq.push({new_elevation, nidx});
+                }
+            } 
+        }
+    }
+    return min_highest_elevation[rows*cols-1];
+}
