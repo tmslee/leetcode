@@ -31,3 +31,13 @@ int hammingWeight(uint32_t n) {
 int hammingWeight(uint32_t n) {
     return std::popcount(n);
 }
+
+// missing number
+int missingNumber(const std::vector<int>& nums) {
+    const int n = static_cast<int>(nums.size());
+    int res = n;
+    for(int i=0; i<n; ++i) {
+        res ^= i^nums[i];
+    }
+    return res;
+}
