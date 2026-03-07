@@ -161,3 +161,116 @@ public:
         return ans;
     }
 };
+
+// 642 design search autocomplete system
+class AutocompleteSystem {
+    struct TrieNode {
+        std::unordered_map<char, std::unique_ptr<TrieNode>> children;
+        std::vector<int> entries;
+    };
+    
+    std::unique_ptr<TrieNode> root_ = std::make_unique<TrieNode>();
+    TrieNode* curr_node_ = nullptr;
+    TrieNode* prev_node_ = nullptr;
+
+    std::unordered_map<int, std::string> imap_;
+    std::unordered_map<std::string, int> cmap_;
+
+    int next_id_ = 0;
+    std::string curr_entry_;
+
+    std::vector<std::string> cache_;
+
+    void insertToTrie(int entry_id, const std::string& entry) {
+        TrieNode* curr = root_.get();
+        for(const char c : entry) {
+            auto& child = curr->children[c];
+            if(!child) child = std::make_unique<TrieNode>();
+            curr = child.get();
+            curr->entries.push_back(entry_id);
+        }
+    }
+
+    void addOrIncrement(const std::string& entry, int count=1) {
+        if(auto it = cmap_.find(entry); it != cmap_.end()) {
+            it->second += count;
+            return;
+        }
+        const int id = next_id_++;
+        imap_[id] = entry;
+        cmap_[entry] = count;
+        insertToTrie(id, entry);
+    }
+
+    void finalizeCurrentEntry() {
+        if(curr_entry_.empty()) return;
+        addOrIncrement(curr_entry_);
+        curr_entry_.clear();
+    }
+
+    void resetInputTraversalState() {
+        curr_node_ = root_.get();
+        prev_node_ = nullptr;
+        cache_.clear();
+    }
+
+    const std::vector<std::string>& getTopEntries() {
+        if(!curr_node_) return {};
+
+        if(prev_node_ && prev_node_->entries.size() == curr_node_->entries.size()) {
+            return cache_;
+        }
+
+        auto cmp = [this](const int a, const int b) {
+            const auto& sa = imap_.at(a);
+            const auto& sb = imap_.at(b);
+            const int ca = cmap_.at(sa);
+            const int cb = cmap_.at(sb);
+            if(ca != cb) return ca > cb;
+            return sa < sb;
+        };
+
+        std::priority_queue<int, std::vector<int>, decltype(cmp)> pq(cmp);
+        for(const int idx : curr_node_->entries) {
+            pq.push(idx);
+            if(static_cast<int>(pq.size()) > 3) pq.pop();
+        }
+
+        const int sz = static_cast<int>(pq.size());
+        cache_.resize(sz);
+        for(int i=sz-1; i>=0; --i) {
+            cache_[i] = imap_.at(pq.top());
+            pq.pop();
+        }
+        return cache_;
+    }
+
+public:
+    AutocompleteSystem(const std::vector<std::string>& sentences, const std::vector<int>& times) {
+        const int n = static_cast<int>(sentences.size());
+        for(int i=0; i<n; ++i) {
+            addOrIncrement(sentences[i], times[i]);
+        }
+        resetInputTraversalState();
+    }
+    
+    std::vector<std::string> input(char c) {
+        if(c == '#'){
+            finalizeCurrentEntry();
+            resetInputTraversalState();
+            return {};
+        } 
+        
+        curr_entry_ += c;
+        if(!curr_node_) return {};
+
+        auto it = curr_node_->children.find(c);
+        if(it == curr_node_->children.end()) {
+            curr_node_ = nullptr;
+            return {};
+        }
+        prev_node_ = curr_node_;
+        curr_node_ = it->second.get();
+        return getTopEntries();
+    }
+};
