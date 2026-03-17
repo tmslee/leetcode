@@ -128,3 +128,22 @@ bool searchMatrix(const std::vector<std::vector<int>>& matrix, const int target)
     }
     return false;
 }
+
+// 153 find minimum in rotated sorted array
+int findMin(const std::vector<int>& nums) {
+    const int n =static_cast<int>(nums.size());
+    int l = 0;
+    int r = n-1;
+    int ans = std::numeric_limits<int>::max();
+    while(l <= r) {
+        int m = l + (r-l)/2;
+        if(nums[l] <= nums[m]) { //left side sorted
+            ans = std::min(ans, nums[l]);
+            l = m+1;
+        } else { //right side sorted
+            ans = std::min(ans, nums[m]);
+            r = m-1;
+        }
+    }
+    return ans;
+}
