@@ -95,3 +95,53 @@ int calculate(const std::string& s) {
     }
     return result;
 }
+
+// 227 basic calculator II
+int calculate(const std::string& s) {
+    std::stack<int> st;
+    bool neg_flag = false;
+    std::optional<int> curr_num;
+    std::optional<char> curr_op;
+
+    auto processNumber = [&]() -> void {
+        if(curr_num) {
+            const int val = neg_flag ? -*curr_num : *curr_num;
+            if(curr_op) {
+                const int prev = st.top();
+                st.pop();
+                if(*curr_op == '*') st.push(prev*val);
+                else st.push(prev/val);
+                curr_op.reset();
+            } else {
+                st.push(val);
+            }
+            curr_num.reset();
+            neg_flag = false;
+        }
+    };
+
+    for(char c : s) {
+        if(std::isdigit(c)) {
+            curr_num = (curr_num) ? *(curr_num)*10 + (c-'0') : c-'0';
+        } else {
+            processNumber();
+            switch (c) {
+                case '-':
+                    neg_flag = true;
+                    break;
+                case '*':
+                case '/':
+                    curr_op = c;
+                    break;
+                default:
+                    break;
+            }
+        }     
+    }
+    processNumber();
+    int ans = 0;
+    while(!st.empty()) {
+        ans += st.top(); st.pop();
+    }
+    return ans;
+}
