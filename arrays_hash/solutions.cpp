@@ -95,3 +95,17 @@ int longestConsecutive(const std::vector<int>& nums) {
     }
     return ans;
 }
+
+// 163 missing ranges
+std::vector<std::vector<int>> findMissingRanges(const std::vector<int>& nums, const int lower, const int upper) {
+    std::vector<std::vector<int>> ans;
+    int curr = lower;
+    for(const int n : nums) {
+        if(n > curr) {
+            ans.push_back({curr, n-1});
+        }
+        curr = n+1;
+    }
+    if(curr <= upper) ans.push_back({curr, upper});
+    return ans;
+}
