@@ -76,3 +76,40 @@ ListNode* mergeKLists(const std::vector<ListNode*>& lists) {
     }
     return dummy.next;
 }
+
+//25 reverse nodes in k-group
+ListNode* reverseKGroup(ListNode* head, int k) {
+    ListNode* ans = nullptr;
+    ListNode* curr = head;
+    ListNode* start = head;
+    ListNode* prev_end = nullptr;
+    int cnt = 1;
+    
+    auto reverse = [](this auto&& self, ListNode* head) -> ListNode*{
+        if(!head || !head->next) return head;
+        ListNode* nxt = head->next;
+        ListNode* newHead = self(nxt);
+        nxt->next = head;
+        return newHead;
+    };
+
+    while(curr) {
+        ListNode* nxt = curr->next;
+        if(cnt == k) {
+            curr -> next = nullptr;                                 
+            cnt = 0;
+            ListNode* r_head = reverse(start);
+            if(prev_end) {
+                prev_end -> next = r_head; //prev end's next is the reversed head
+            } else  {
+                ans = r_head;
+            }
+            prev_end = start; //start is the new prev_end
+            prev_end -> next = nxt; //new prev_end's next is nxt;
+            start = nxt; //new start is nxt
+        }
+        curr = nxt;
+        ++cnt;
+    }
+    return ans ? ans : head;
+}
