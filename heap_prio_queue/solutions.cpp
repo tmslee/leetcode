@@ -52,3 +52,39 @@ public:
         return pq_.top();
     }
 };
+
+// 767 reorganize string 
+string reorganizeString(const std::string& s) {
+    const int n = static_cast<int>(s.size());
+    std::vector<int> counts(26, 0);
+    for(const char c : s) {
+        ++counts[c-'a'];
+    }
+    auto cmp = [&](const int i1, const int i2)->bool{
+        return counts[i1] < counts[i2];
+    };
+    std::priority_queue<int, vector<int>, decltype(cmp)> pq(cmp);
+    for(int i=0; i<26; ++i) {
+        if(counts[i] > 0) pq.push(i);
+    }
+    std::string ans;
+    while(!pq.empty()) {
+        if(pq.size() >= 2) {
+            int i1 = pq.top();
+            pq.pop();
+            int i2 = pq.top();
+            pq.pop();
+            if(--counts[i1] > 0) pq.push(i1);
+            if(--counts[i2] > 0) pq.push(i2);
+            ans += 'a'+i1;
+            ans += 'a'+i2;
+        } else {
+            int i =pq.top(); 
+            pq.pop();
+            if(!ans.empty() && ans.back() == 'a'+i) return "";
+            ans += 'a'+i;
+            if(--counts[i] > 0) pq.push(i);
+        }
+    }
+    return ans;
+}
