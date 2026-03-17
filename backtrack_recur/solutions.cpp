@@ -106,3 +106,29 @@ std::vector<std::vector<int>> combinationSum2(std::vector<int>& candidates, cons
     helper(0, 0);
     return ans;
 }
+
+// 46 permutations
+std::vector<std::vector<int>> permute(const std::vector<int>& nums) {
+    std::vector<std::vector<int>> ans;
+    std::vector<int> curr;
+    const int n = static_cast<int>(nums.size());
+    std::vector<char> used(n, 0);
+
+    auto helper = [&](this auto&& self) -> void {
+        if(static_cast<int>(curr.size()) == n) {
+            ans.push_back(curr);
+            return;
+        }
+        for(int i=0; i<n; ++i){
+            if(!used[i]) {
+                used[i] = 1;
+                curr.push_back(nums[i]);
+                self();
+                curr.pop_back();
+                used[i] = 0;
+            }
+        }
+    };
+    helper();
+    return ans;
+}
