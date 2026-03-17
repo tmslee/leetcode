@@ -91,3 +91,18 @@ void sortColors(std::vector<int>& nums) {
         }
     }
 }
+
+// 125 valid palindrome
+bool isPalindrome(const std::string& s) {
+    const int n = static_cast<int>(s.size());
+    int l = 0;
+    int r = n-1;
+    while(l < r) {
+        while(l<r && !std::isalnum(static_cast<unsigned char>(s[l]))) ++l;
+        while(l<r && !std::isalnum(static_cast<unsigned char>(s[r]))) --r;
+        if(std::tolower(static_cast<unsigned char>(s[l])) != std::tolower(static_cast<unsigned char>(s[r]))) return false;
+        ++l;
+        --r;
+    }
+    return true;
+}
