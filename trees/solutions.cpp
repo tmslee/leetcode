@@ -47,3 +47,27 @@ int maxDepth(TreeNode* root) {
     if(!root) return 0;
     return std::max(maxDepth(root->left), maxDepth(root->right)) + 1;
 }
+
+// 105 construct binary tree from preorder and inorder
+TreeNode* buildTree(const std::vector<int>& preorder, const std::vector<int>& inorder) {
+    const int n = static_cast<int>(preorder.size());
+    std::unordered_map<int,int> in_imap;
+    for(int i=0; i<n; ++i) {
+        in_imap[inorder[i]] = i;
+    }
+    int pidx = 0;
+    auto helper = [&](this auto&& self, const int l, const int r) -> TreeNode* {
+        if(pidx >= n || l > r) return nullptr;
+        const int val = preorder[pidx];
+        const int in_idx = in_imap[val];
+        if(in_idx < l || in_idx > r) return nullptr;
+        TreeNode* curr = new TreeNode(val);
+        ++pidx;
+        curr->left = self(l, in_idx-1);
+        curr->right = self(in_idx+1, r);
+        return curr;
+    };
+
+    TreeNode* ans = helper(0, n-1);
+    return ans;
+}
