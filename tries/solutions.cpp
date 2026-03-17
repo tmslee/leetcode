@@ -274,3 +274,48 @@ public:
         return getTopEntries();
     }
 };
+
+// 1032 stream of characters 
+class StreamChecker {
+public:
+    struct TrieNode {
+        std::array<unique_ptr<TrieNode>, 26> children;
+        bool is_end = false;
+    };
+
+    std::unique_ptr<TrieNode> root = std::make_unique<TrieNode>();
+    std::vector<char> curr_str;
+
+    void insertWord(const std::string_view sv) {
+        TrieNode* curr = root.get();
+        const int len = static_cast<int>(sv.size());
+        for(int i=len-1; i>=0; --i) {
+            char c = sv[i];
+            auto& child = curr->children[c-'a'];
+            if(!child) child = std::make_unique<TrieNode>();
+            curr = child.get();
+        }
+        curr->is_end = true;
+    }
+
+    StreamChecker(const std::vector<std::string>& words) {
+        for(const auto& word : words) {
+            insertWord(word);
+        }
+    }
+
+
+    bool query(char letter) {
+        curr_str.push_back(letter);
+        TrieNode* curr = root.get();
+        const int len = static_cast<int>(curr_str.size());
+        for(int i=len-1; i>=0; --i) {
+            char c = curr_str[i];
+            auto& child = curr->children[c-'a'];
+            if(!child) return false;
+            curr = child.get();
+            if(curr->is_end) return true;
+        }
+        return false;
+    }
+};
