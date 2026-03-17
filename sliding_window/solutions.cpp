@@ -79,3 +79,19 @@ int lengthOfLongestSubstringTwoDistinct(const std::string& s) {
     }
     return ans;
 }
+
+// 209 minimum size subarray sum
+int minSubArrayLen(const int target, const std::vector<int>& nums) {
+    const int n = static_cast<int>(nums.size());
+    int ans = std::numeric_limits<int>::max();
+    int l = 0;
+    int currSum = 0;
+    for(int r=0; r<n; ++r) {
+        currSum += nums[r];
+        while(l<=r && currSum >= target) {
+            ans = std::min(ans, r-l+1);
+            currSum -= nums[l++];
+        }
+    }
+    return (ans == std::numeric_limits<int>::max()) ? 0 : ans;
+}
