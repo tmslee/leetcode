@@ -41,6 +41,70 @@ public:
     }
 };
 
+class Trie {
+
+struct Node {
+    Node* children[26];
+    bool is_end;
+    Node() : is_end(false) {
+        for(int i=0; i<26; ++i)
+            children[i] = nullptr;
+    }
+};
+
+Node* root_;
+
+public:
+    Trie() : root_(new Node()){}
+    Trie(std::initializer_list<std::string> words) : Trie() {
+        for(const auto& w : words) insert(w);
+    }
+    ~Trie() { clear_subtree(root_); }
+
+    static int idx(const char c) {
+        return c-'a';
+    }
+    
+    void insert(const std::string word) {
+        Node* curr = root_;
+        for(const char c : word) {
+            const int i = idx(c);
+            if(!curr->children[i]) {
+                curr->children[i] = new Node();
+            }
+            curr = curr->children[i];
+        }
+        curr->is_end = true;
+    }
+    
+    bool search(const std::string word) {
+        Node* curr = root_;
+        for(const char c : word) {
+            const int i = idx(c);
+            if(!curr->children[i]) return false;
+            curr = curr->children[i];
+        }
+        return curr->is_end;
+    }
+    
+    bool startsWith(const std::string prefix) {
+        Node* curr = root_;
+        for(const char c : prefix) {
+            const int i = idx(c);
+            if(!curr->children[i]) return false;
+            curr = curr->children[i];
+        }
+        return true;
+    }
+
+    void clear_subtree(Node* n) {
+        for(int i=0; i<26; ++i) {
+            if(n->children[i]) clear_subtree(n->children[i]);
+        }
+        delete n;
+    }
+};
+
 // 211 design add and search words
 class WordDictionary {
 
