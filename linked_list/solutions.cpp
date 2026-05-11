@@ -54,6 +54,21 @@ ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
     return dummy.next;
 }
 
+ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+    if(list1 && list2) {
+        if(list1->val <= list2->val) {
+            list1->next = mergeTwoLists(list1->next, list2);
+            return list1;
+        } else {
+            list2->next = mergeTwoLists(list1, list2->next);
+            return list2;
+        }
+    }
+    if(!list1) return list2;
+    if(!list2) return list1;
+    return nullptr;
+}
+
 // 23 merge k sorted lists
 ListNode* mergeKLists(const std::vector<ListNode*>& lists) {
     ListNode dummy(0);
