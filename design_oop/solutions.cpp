@@ -400,3 +400,36 @@ public:
         return sum_/q_.size();
     }
 };
+
+//232 implement queue using stacks
+class MyQueue {
+
+std::stack<int> in_;
+std::stack<int> out_;
+
+public:
+    MyQueue() {
+    }
+    void flush() {
+        while(!in_.empty()) {
+            out_.push(in_.top());
+            in_.pop();
+        }
+    }
+    void push(int x) {
+        in_.push(x);
+    }
+    int pop() {
+        if(out_.empty()) flush();
+        int res = out_.top();
+        out_.pop();
+        return res;
+    }
+    int peek() {
+        if(out_.empty()) flush();
+        return out_.top();
+    }
+    bool empty() const {
+        return in_.empty() && out_.empty();
+    }
+};
