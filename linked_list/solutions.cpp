@@ -113,3 +113,26 @@ ListNode* reverseKGroup(ListNode* head, int k) {
     }
     return ans ? ans : head;
 }
+
+// 206 reverse list
+ListNode* reverseList(ListNode* head) {
+    if(!head || !head->next) return head;
+    ListNode* next = head->next;
+    ListNode* rev = reverseList(next);
+    next->next = head;
+    head->next = nullptr;
+    return rev;
+}
+
+ListNode* reverseList(ListNode* head) {
+    if(!head) return head;
+    ListNode* curr = head;
+    ListNode* r_head = nullptr;
+    while(curr) {
+        ListNode* tmp = curr->next;
+        curr->next = r_head;
+        r_head = curr;
+        curr = tmp;
+    }
+    return r_head;
+}
