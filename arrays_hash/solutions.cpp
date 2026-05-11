@@ -109,3 +109,13 @@ std::vector<std::vector<int>> findMissingRanges(const std::vector<int>& nums, co
     if(curr <= upper) ans.push_back({curr, upper});
     return ans;
 }
+
+//349 intersection of two arrays
+std::vector<int> intersection(const std::vector<int>& nums1, const std::vector<int>& nums2) {
+    std::unordered_set<int> res;
+    std::unordered_set<int> s(nums1.begin(), nums1.end());
+    for(int n : nums2) {
+        if(auto it = s.find(n) ; it!=s.end()) res.insert(n);
+    }
+    return std::vector<int>(res.begin(), res.end());
+}
