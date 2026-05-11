@@ -48,6 +48,22 @@ int maxDepth(TreeNode* root) {
     return std::max(maxDepth(root->left), maxDepth(root->right)) + 1;
 }
 
+int maxDepth(TreeNode* root) {
+    queue<TreeNode*> q;
+    if(root) q.push(root);
+    int ans = 0;
+    while(!q.empty()){
+        int currSz = static_cast<int>(q.size());
+        for(int i=0; i<currSz; ++i) {
+            auto curr = q.front(); q.pop();
+            if(curr->left) q.push(curr->left);
+            if(curr->right) q.push(curr->right);
+        }
+        ++ans;
+    }
+    return ans;
+}
+
 // 105 construct binary tree from preorder and inorder
 TreeNode* buildTree(const std::vector<int>& preorder, const std::vector<int>& inorder) {
     const int n = static_cast<int>(preorder.size());
