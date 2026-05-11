@@ -1,26 +1,15 @@
 // 20. valid parantheses
-bool isValid(const std::string& s) {
-    std::vector<char> stack;
-    stack.reserve(s.size());
-
-    static const std::unordered_map<char, char> match {
-        {')', '('},
-        {']', '['},
-        {'}', '{'}
+bool isValid(std::string s) {
+    static const std::unordered_map<char, char> brackets = {
+        {')', '('},{'}', '{'},{']', '['}
     };
-
+    std::stack<char> st;
     for(const char c : s) {
-        if(c=='(' || c=='{' || c=='[') {
-            stack.emplace_back(c);
-        } else {
-            const auto it = match.find(c);
-            if(it == match.end()) continue; //unexepcted char
-            if(stack.empty() || stack.back() != it->second) return false;
-            stack.pop_back();
-        }
+        if(const auto it = brackets.find(c) ; it == brackets.end()) st.push(c);
+        else if(st.empty() || st.top() != it->second) return false;
+        else st.pop();
     }
-
-    return stack.empty();
+    return st.empty();
 }
 
 // 84 largest rectangle in histogram
