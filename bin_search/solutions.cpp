@@ -147,3 +147,16 @@ int findMin(const std::vector<int>& nums) {
     }
     return ans;
 }
+
+//704 binary search
+int search(const std::vector<int>& nums, const int target) {
+    int l = 0;
+    int r = static_cast<int>(nums.size())-1;
+    while(l<=r) {
+        int m = l + (r-l)/2;
+        if(nums[m] == target) return m;
+        if(target < nums[m]) r = m-1;
+        else l = m+1; 
+    }
+    return -1;
+}
