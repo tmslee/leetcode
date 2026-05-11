@@ -71,3 +71,28 @@ TreeNode* buildTree(const std::vector<int>& preorder, const std::vector<int>& in
     TreeNode* ans = helper(0, n-1);
     return ans;
 }
+
+// 226 invert binary tree
+TreeNode* invertTree(TreeNode* root) {
+    if(!root) return root;
+    TreeNode* left = invertTree(root->left);
+    TreeNode* right = invertTree(root->right);
+    root->right = left;
+    root->left = right;
+    return root;
+}
+
+TreeNode* invertTree(TreeNode* root) {
+    queue<TreeNode*> q;
+    if(root) q.push(root);
+    while(!q.empty()) {
+        auto curr = q.front();
+        q.pop();
+        auto tmp = curr->left;
+        curr->left = curr->right;
+        curr->right = tmp;
+        if(curr->left) q.push(curr->left);
+        if(curr->right) q.push(curr->right);
+    }
+    return root;
+}
