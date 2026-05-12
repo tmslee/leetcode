@@ -151,6 +151,29 @@ Node* cloneGraph(Node* node) {
     return helper(node);
 }
 
+Node* cloneGraph(Node* node) {
+    std::unordered_map<Node*, Node*> cloned;
+    std::queue<Node*> q;
+
+    if(node) {
+        q.push(node);
+        Node* clone = new Node(node->val);
+        cloned[node] = clone;
+    }
+
+    while(!q.empty()) {
+        auto curr = q.front(); q.pop();
+        for(auto child : curr->neighbors) {
+            if(auto it=cloned.find(child); it==cloned.end()) {
+                cloned[child] = new Node(child->val);
+                q.push(child);
+            }
+            cloned[curr]->neighbors.push_back(cloned[child]);
+        }
+    }
+    return cloned[node];
+}
+
 // 200 number of islands
 int numIslands(std::vector<std::vector<char>>& grid) {
     if(grid.empty()) return 0;
