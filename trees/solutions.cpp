@@ -10,6 +10,16 @@ bool isValidBST(const TreeNode* root) {
     return helper(root, std::nullopt, std::nullopt);
 }
 
+bool isValidBST(TreeNode* root) {
+    auto helper = [](this auto&& self, TreeNode* node, long long minVal, long long maxVal)->bool{
+        if(!node) return true;
+        if(node->val <= minVal || node->val >= maxVal) return false;
+        if(!self(node->left, minVal, node->val)) return false;
+        return self(node->right, node->val, maxVal); 
+    };
+    return helper(root, std::numeric_limits<long long>::min(), std::numeric_limits<long long>::max());
+}
+
 // 100 same tree
 bool isSameTree(TreeNode* p, TreeNode* q) {
     if(!p && !q) return true;
