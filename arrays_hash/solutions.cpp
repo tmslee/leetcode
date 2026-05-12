@@ -119,3 +119,26 @@ std::vector<int> intersection(const std::vector<int>& nums1, const std::vector<i
     }
     return std::vector<int>(res.begin(), res.end());
 }
+
+//350 intersection of two arrays II
+std::vector<int> intersect(std::vector<int>& nums1, std::vector<int>& nums2) {
+    std::vector<int> res;
+    std::sort(nums1.begin(), nums1.end());
+    std::sort(nums2.begin(), nums2.end());
+
+    int i1 = 0;
+    int i2 = 0;
+    int n1 = static_cast<int>(nums1.size());
+    int n2 = static_cast<int>(nums2.size());
+
+    while(i1 < n1 && i2 < n2) {
+        if(nums1[i1] == nums2[i2]) {
+            res.push_back(nums1[i1]);
+            ++i1;
+            ++i2;
+        } else if(nums1[i1] < nums2[i2]) ++i1;
+        else ++i2;
+    }
+
+    return res;
+}
