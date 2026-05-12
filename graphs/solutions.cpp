@@ -207,3 +207,26 @@ int numIslands(std::vector<std::vector<char>>& grid) {
 
     return ans;
 }
+
+//207 course schedule
+bool canFinish(const int numCourses, const std::vector<std::vector<int>>& prerequisites) {
+    std::vector<int> indeg(numCourses, 0);
+    std::vector<std::vector<int>> graph(numCourses, std::vector<int>());
+    for(const auto& prereq : prerequisites) {
+        ++indeg[prereq[0]];
+        graph[prereq[1]].push_back(prereq[0]);
+    }
+    std::queue<int> q;
+    int completed = 0;
+    for(int i=0; i<numCourses; ++i) {
+        if(indeg[i] == 0) q.push(i);
+    }
+    while(!q.empty()) {
+        int curr = q.front(); q.pop();
+        ++completed;
+        for(const int nei : graph[curr]) {
+            if(--indeg[nei] == 0) q.push(nei);
+        }
+    }
+    return completed == numCourses;
+}
