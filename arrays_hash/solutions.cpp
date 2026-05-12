@@ -172,3 +172,11 @@ std::vector<int> intersect(std::vector<int>& nums1, std::vector<int>& nums2) {
 
     return res;
 }
+
+//283 move zeros
+void moveZeroes(vector<int>& nums) {
+    int swapidx = 0;
+    for(int i=0; i<static_cast<int>(nums.size()); ++i) {
+        if(nums[i] != 0) std::swap(nums[swapidx++], nums[i]);
+    }
+}
