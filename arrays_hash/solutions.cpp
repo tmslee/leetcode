@@ -180,3 +180,16 @@ void moveZeroes(vector<int>& nums) {
         if(nums[i] != 0) std::swap(nums[swapidx++], nums[i]);
     }
 }
+
+//28 find index of first occurance in string
+int strStr(const std::string& haystack, const std::string& needle) {
+    if(needle.size() > haystack.size()) return -1;
+    if(needle == haystack) return 0;
+    int h = static_cast<int>(haystack.size());
+    int n = static_cast<int>(needle.size());
+    for(int i=0; i<=h-n; ++i) {
+        if(haystack[i] == needle[0] && haystack.substr(i, n) == needle)
+            return i;
+    }
+    return -1;
+}
