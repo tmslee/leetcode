@@ -152,6 +152,71 @@ public:
     }
 };
 
+
+class WordDictionary {
+
+struct Node {
+    Node* children[26];
+    bool is_end;
+    Node() : is_end(false) {
+        for(int i=0; i<26; ++i) {
+            children[i] = nullptr;
+        }
+    }
+};
+
+Node* root_;
+
+public:
+    WordDictionary() : root_(new Node()) {}
+    WordDictionary(std::initializer_list<std::string> words) : WordDictionary() {
+        for(const auto& word : words)
+            addWord(word);
+    }
+    ~WordDictionary() noexcept { clear_subtree(root_); }
+
+    static int idx(const char c) { return c-'a'; }
+
+    void clear_subtree(Node* n) noexcept {
+        for(auto child : n->children)
+            if(child) clear_subtree(child);
+        delete n;
+    }
+
+    void addWord(string word) {
+        Node* curr = root_;
+        for(const char c : word) {
+            const int i = idx(c);
+            if(!curr->children[i]) curr->children[i] = new Node();
+            curr = curr->children[i];
+        }
+        curr->is_end = true;
+    }
+
+    bool search(string word) {
+        int n = static_cast<int>(word.size());
+
+        auto helper = [&](this auto&& self, Node* node, int i)->bool {
+            for(int j=i; j<n; ++j) {
+                const char c = word[j];
+                if(c == '.') {
+                    for(auto child : node->children) {
+                        if(child && self(child, j+1)) return true;
+                    }
+                    return false;
+                } else {
+                    const int index = idx(c);
+                    if(!node->children[index]) return false;
+                    node = node->children[index];
+                }
+            }
+            return node->is_end;
+        };
+        
+        return helper(root_, 0);
+    }
+};
+
 // 212 word search II
 class Solution {
 
