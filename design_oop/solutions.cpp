@@ -433,3 +433,38 @@ public:
         return in_.empty() && out_.empty();
     }
 };
+
+// 225 implement stack using queues
+class MyStack {
+
+std::queue<int> curr_;
+std::queue<int> tmp_;
+
+public:
+    MyStack() {
+        
+    }
+    
+    void push(int x) {
+        tmp_.push(x);
+        while(!curr_.empty()) {
+            tmp_.push(curr_.front());
+            curr_.pop();
+        }
+        std::swap(curr_, tmp_);
+    }
+    
+    int pop() {
+        int val = curr_.front();
+        curr_.pop();
+        return val;
+    }
+    
+    int top() {
+        return curr_.front();
+    }
+    
+    bool empty() {
+        return curr_.empty();
+    }
+};
