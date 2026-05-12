@@ -56,6 +56,36 @@ std::vector<std::vector<std::string>> groupAnagrams(const std::vector<std::strin
     return ans;
 }
 
+vector<vector<string>> groupAnagrams(std::vector<std::string>& strs) {
+    struct StrHash {
+        size_t operator()(const std::string& s) const {
+            size_t hash = 0;
+            for(const char c : s) {
+                hash ^= std::hash<char>{}(c);
+            }
+            return hash;
+        }
+    };
+    struct StrEq {
+        bool operator()(const std::string& a, const std::string& b) const {
+            if(a.size() != b.size()) return false;
+            std::array<int, 26> freq{};
+            for (char c : a) freq[c - 'a']++;
+            for (char c : b) freq[c - 'a']--;
+            return std::all_of(freq.begin(), freq.end(), [](int x) { return x == 0; });
+        }
+    };
+    std::unordered_map<std::string, std::vector<std::string>, StrHash, StrEq> groups;
+    for(const auto& s : strs) {
+        groups[s].push_back(s);
+    }
+    std::vector<std::vector<std::string>> res;
+    for(auto&[k, group] : groups) {
+        res.push_back(std::move(group));
+    }
+    return res;
+}
+
 // 621 task scheduler
 int leastInterval(const std::vector<char>& tasks, const int n) {
     std::array<int, 26> freqs{};
