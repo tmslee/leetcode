@@ -120,3 +120,17 @@ bool isAnagram(const std::string s, const std::string t) {
     }
     return true;
 }
+
+//167. Two Sum II - Input Array Is Sorted
+std::vector<int> twoSum(const std::vector<int>& numbers, const int target) {
+    int n = static_cast<int>(numbers.size());
+    int l=0;
+    int r=n-1;
+    while(l<r) {
+        const int sum = numbers[l] + numbers[r];
+        if(sum == target) return {l+1, r+1};
+        if(sum > target)--r;
+        else ++l;
+    }
+    throw std::invalid_argument("no valid solution");
+}
