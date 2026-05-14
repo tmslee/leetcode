@@ -193,3 +193,20 @@ int strStr(const std::string& haystack, const std::string& needle) {
     }
     return -1;
 }
+
+//238 product of array except itself
+std::vector<int> productExceptSelf(std::vector<int>& nums) {
+    int n = static_cast<int>(nums.size());
+    std::vector<int> pre(n, 1);
+    std::vector<int> suf(n, 1);
+    for(int i=1; i<n; ++i){
+        int l = i;
+        int r = n-1-i;
+        pre[l] = nums[l-1]*pre[l-1];
+        suf[r] = nums[r+1]*suf[r+1]; 
+    }
+    std::vector<int> ans(n, 0);
+    for(int i=0; i<n; ++i)
+        ans[i] = pre[i]*suf[i];
+    return ans;
+}
