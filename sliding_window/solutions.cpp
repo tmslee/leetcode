@@ -95,3 +95,21 @@ int minSubArrayLen(const int target, const std::vector<int>& nums) {
     }
     return (ans == std::numeric_limits<int>::max()) ? 0 : ans;
 }
+
+//239. Sliding Window Maximum
+std::vector<int> maxSlidingWindow(const std::vector<int>& nums, const int k) {
+    int n = static_cast<int>(nums.size());
+    std::deque<int> dq; //monodecreasing of INDICES
+    std::vector<int> ans(n-k+1, 0);
+    for(int i=0; i<n; ++i){
+        while(!dq.empty() && nums[dq.back()] < nums[i])
+            dq.pop_back();
+        dq.push_back(i);
+        if(i>=k-1) {
+            //pop if our largest idx is no longer in our window
+            if(dq.front() == i-k) dq.pop_front();
+            ans[i-(k-1)] = nums[dq.front()];
+        }
+    }
+    return ans;
+}
