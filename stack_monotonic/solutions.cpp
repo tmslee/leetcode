@@ -134,3 +134,37 @@ int calculate(const std::string& s) {
     }
     return ans;
 }
+
+// 394. Decode String
+std::string decodeString(std::string s) {
+    auto helper = [&](this auto&& self, const int l, const int r) -> std::string {
+        if(l>r) return "";
+        std::string res;
+        std::stack<int> opens;
+        std::optional<int> currInt;
+        for(int i=l; i<=r; ++i) {
+            const char c = s[i];
+            if(opens.empty()) {
+                if(std::isdigit(c)) {
+                    currInt = currInt ? (*currInt)*10 + (c-'0') : c-'0';
+                } else if(std::isalpha(c))
+                    res+=c;
+            } 
+            if(c == '[') {
+                opens.push(i);
+            } else if(c==']') {
+                if(opens.size() == 1) {
+                    std::string to_add = self(opens.top()+1, i-1);
+                    for(int j=0; j<*currInt; ++j) {
+                        res += to_add;
+                    }
+                    currInt = nullopt;
+                }
+                opens.pop();
+            }
+        }
+        return res;
+    };
+    int n = static_cast<int>(s.size());
+    return helper(0, n-1);
+}
